@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>i❤هm💕a💕n</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        #heartContainer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+        }
+
+        svg {
+            width: 150px;
+            height: 150px;
+            fill: red;
+            transform-origin: center;
+            transform-box: fill-box;
+            animation: heartbeat 2s infinite alternate ease-in-out;
+            transition: fill 2s ease-in-out;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20%;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            font-size: 24px;
+            color: #333;
+        }
+
+        #startButton {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #e74c3c;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            z-index: 999;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        #startButton:hover {
+            opacity: 0.9;
+            padding: 100px;
+            background-color: #c0392b;
+        }
+
+        @keyframes heartbeat {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.2);
+            }
+        }
+    </style>
+    <script>
+        function startDrawing() {
+            var startButton = document.getElementById('startButton');
+            startButton.style.display = 'none';
+
+            var heartContainer = document.getElementById('heartContainer');
+            var heartSvg = document.querySelector('svg');
+
+            setTimeout(function() {
+                heartContainer.style.opacity = 1;
+                heartSvg.style.fill = '#e74c3c';
+
+                setTimeout(function() {
+                    heartContainer.innerHTML = '<h1> عندك تقلق  🤣🤣😜مرحبًا بك في قلبي!ايمان</h1>';
+                    heartContainer.querySelector('h1').style.opacity = 1;
+                }, 2000);
+            }, 500);
+        }
+    </script>
+</head>
+<body>
+    <button id="startButton" onclick="startDrawing()">بركي هنا 💕❤</button>
+    <div id="heartContainer">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C16.09 3.81 17.76 3 19.5 3 22.58 3 25 5.42 25 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+    </div>
+</body>
+</html>
