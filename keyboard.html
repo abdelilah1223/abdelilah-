@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Japanese Keyboard</title>
+    <style>
+        /* نفس التنسيقات السابقة */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #displayText {
+            width: 90%;
+            height: auto;
+            min-height: 60px;
+            max-height: 150px;
+            border: 1px solid #333;
+            background-color: #fff;
+            margin: 10px 0;
+            padding: 10px;
+            overflow-y: auto;
+            font-size: 18px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            resize: vertical;
+        }
+
+        #copyButton {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.2s, box-shadow 0.2s;
+        }
+
+        #copyButton:hover {
+            background-color: #0056b3;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        #keyboard {
+            width: 100%;
+            max-width: 90%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            background-color: #333;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            position: fixed;
+            bottom: 0;
+            max-height: 50%;
+            overflow-y: auto;
+        }
+
+        .keyboard-btn {
+            width: 40px;
+            height: 40px;
+            margin: 2px;
+            font-size: 18px;
+            line-height: 40px;
+            cursor: pointer;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            background-color: #000;
+            color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.2s, box-shadow 0.2s;
+        }
+
+        .keyboard-btn:hover {
+            background-color: #444;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .control-btn {
+            width: 40px;
+            height: 40px;
+            margin: 2px;
+            font-size: 18px;
+            border-radius: 5px;
+            color: #fff;
+            background-color: #000;
+            cursor: pointer;
+            border: none;
+        }
+
+        .control-btn:hover {
+            background-color: #444;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .delete-btn {
+            background-color: #ff4d4d;
+        }
+
+        .switch-btn {
+            background-color: #28a745;
+        }
+
+        .toggle-btn {
+            background-color: #17a2b8;
+        }
+
+        .space-btn {
+            width: 100px;
+            height: 40px;
+            margin: 2px;
+            font-size: 18px;
+            line-height: 40px;
+            border-radius: 5px;
+            background-color: #000;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+        }
+
+        .enter-btn {
+            width: 80px;
+            height: 40px;
+            margin: 2px;
+            font-size: 18px;
+            line-height: 40px;
+            border-radius: 5px;
+            background-color: #000;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- زر النسخ -->
+    <button id="copyButton">📋</button>
+
+    <!-- منطقة عرض النص -->
+    <textarea id="displayText" rows="5" cols="50"></textarea>
+
+    <!-- الكيبورد -->
+    <div id="keyboard"></div>
+
+    <script>
+        const hiraganaChars = ['あ', 'い', 'う', 'え', 'お', 'か', 'き', 'く', 'け', 'こ', 'さ', 'し', 'す', 'せ', 'そ', 'た', 'ち', 'つ', 'て', 'と', 'な', 'に', 'ぬ', 'ね', 'の', 'は', 'ひ', 'ふ', 'へ', 'ほ', 'ま', 'み', 'む', 'め', 'も', 'や', 'ゆ', 'よ', 'ら', 'り', 'る', 'れ', 'ろ', 'わ', 'を', 'ん', 'ぁ', 'ぃ', 'ぅ', 'ぇ', 'ぉ', 'ゃ', 'ゅ', 'ょ', 'ゔ', 'ゕ', 'ゖ'];
+        const hiraganaWithMarks = ['が', 'ぎ', 'ぐ', 'げ', 'ご', 'ざ', 'じ', 'ず', 'ぜ', 'ぞ', 'だ', 'ぢ', 'づ', 'で', 'ど', 'ば', 'び', 'ぶ', 'べ', 'ぼ', 'ぱ', 'ぴ', 'ぷ', 'ぺ', 'ぽ'];
+        const katakanaChars = ['ア', 'イ', 'ウ', 'エ', 'オ', 'カ', 'キ', 'ク', 'ケ', 'コ', 'サ', 'シ', 'ス', 'セ', 'ソ', 'タ', 'チ', 'ツ', 'テ', 'ト', 'ナ', 'ニ', 'ヌ', 'ネ', 'ノ', 'ハ', 'ヒ', 'フ', 'ヘ', 'ホ', 'マ', 'ミ', 'ム', 'メ', 'モ', 'ヤ', 'ユ', 'ヨ', 'ラ', 'リ', 'ル', 'レ', 'ロ', 'ワ', 'ヲ', 'ン', 'ァ', 'ィ', 'ゥ', 'ェ', 'ォ', 'ャ', 'ュ', 'ョ', 'ヴ', 'ヵ', 'ヶ'];
+        const katakanaWithMarks = ['ガ', 'ギ', 'グ', 'ゲ', 'ゴ', 'ザ', 'ジ', 'ズ', 'ゼ', 'ゾ', 'ダ', 'ヂ', 'ヅ', 'デ', 'ド', 'バ', 'ビ', 'ブ', 'ベ', 'ボ', 'パ', 'ピ', 'プ', 'ペ', 'ポ'];
+        const emojis = ['😊', '😂', '❤️', '😍', '😒', '😎', '😢', '😠', '😳', '😴'];
+        const numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        const symbols = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')'];
+
+        let currentMode = hiraganaChars;
+        let showNumbersAndSymbols = false;
+        let modeIndex = 0;
+
+        function createKeyboardButtons(mode) {
+            const keyboard = document.getElementById('keyboard');
+            keyboard.innerHTML = '';
+
+            // أزرار التحكم في الصف الأول
+            createControlButtons(keyboard);
+
+            mode.forEach(char => {
+                const button = document.createElement('button');
+                button.classList.add('keyboard-btn');
+                button.textContent = char;
+                button.addEventListener('click', () => {
+                    document.getElementById('displayText').value += char;
+                });
+                keyboard.appendChild(button);
+            });
+
+            // أزرار المسافة والعودة للسطر في الصف الأخير
+            createLastRowButtons(keyboard);
+        }
+
+        // إنشاء أزرار التحكم في الصف الأول
+        function createControlButtons(keyboard) {
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('control-btn', 'delete-btn');
+            deleteButton.textContent = '⌫';
+            deleteButton.addEventListener('click', () => {
+                const displayText = document.getElementById('displayText');
+                displayText.value = displayText.value.slice(0, -1);
+            });
+            keyboard.appendChild(deleteButton);
+
+            const switchButton = document.createElement('button');
+            switchButton.classList.add('control-btn', 'switch-btn');
+            switchButton.textContent = '🔄';
+            switchButton.addEventListener('click', switchMode);
+            keyboard.appendChild(switchButton);
+
+            const toggleButton = document.createElement('button');
+            toggleButton.classList.add('control-btn', 'toggle-btn');
+            toggleButton.textContent = '🔣';
+            toggleButton.addEventListener('click', toggleNumbersAndSymbols);
+            keyboard.appendChild(toggleButton);
+        }
+
+        // إنشاء أزرار المسافة والعودة للسطر في الصف الأخير
+        function createLastRowButtons(keyboard) {
+            const spaceButton = document.createElement('button');
+            spaceButton.classList.add('space-btn');
+            spaceButton.textContent = ' ';
+            spaceButton.addEventListener('click', () => {
+                document.getElementById('displayText').value += ' ';
+            });
+            keyboard.appendChild(spaceButton);
+
+            const enterButton = document.createElement('button');
+            enterButton.classList.add('enter-btn');
+            enterButton.textContent = '⏎';
+            enterButton.addEventListener('click', () => {
+                document.getElementById('displayText').value += '\n';
+            });
+            keyboard.appendChild(enterButton);
+        }
+
+        function switchMode() {
+            modeIndex = (modeIndex + 1) % 4;
+            if (modeIndex === 0) {
+                currentMode = hiraganaChars;
+            } else if (modeIndex === 1) {
+                currentMode = katakanaChars;
+            } else if (modeIndex === 2) {
+                currentMode = hiraganaWithMarks;
+            } else if (modeIndex === 3) {
+                currentMode = katakanaWithMarks;
+            }
+            createKeyboardButtons(currentMode);
+        }
+
+        function toggleNumbersAndSymbols() {
+            showNumbersAndSymbols = !showNumbersAndSymbols;
+            if (showNumbersAndSymbols) {
+                createKeyboardButtons([...numbers, ...symbols]);
+            } else {
+                createKeyboardButtons(currentMode);
+            }
+        }
+
+        document.getElementById('copyButton').addEventListener('click', () => {
+            const displayText = document.getElementById('displayText');
+            displayText.select();
+            document.execCommand('copy');
+        });
+
+        // إنشاء الكيبورد في البداية
+        createKeyboardButtons(currentMode);
+    </script>
+</body>
+</html>
